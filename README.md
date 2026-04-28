@@ -41,45 +41,14 @@ Visualización de las palabras más repetidas dentro de la conversación.
 
 🧩 Tecnologías Utilizadas
 Backend
-Java
-Spring Boot
-Maven
+  Java
+  Spring Boot
+  Maven
 Frontend
-HTML
-CSS
-JavaScript
-Procesamiento de datos
-Parser de archivos .txt
-Limpieza y normalización de mensajes
-Análisis estadístico de texto
-📂 Estructura del Proyecto
-whatsapp-analyzer/
-│
-├── backend/
-│   ├── controllers/
-│   ├── services/
-│   ├── models/
-│   └── repository/
-│
-├── frontend/
-│   ├── html/
-│   ├── css/
-│   ├── js/
-│   └── assets/
-│
-├── docs/
-│
-├── README.md
-└── pom.xml
-⚙️ Requisitos Previos
+  HTML
+  CSS
+  JavaScript
 
-Antes de ejecutar el proyecto se necesita tener instalado:
-
-Java JDK 17 o superior
-Maven
-Git
-Navegador web moderno
-Archivo de exportación de chat de WhatsApp en formato .txt
 📥 Cómo Exportar un Chat de WhatsApp
 
 Desde WhatsApp:
@@ -91,25 +60,6 @@ Elegir Sin archivos multimedia
 Guardar el archivo .txt
 
 ⚠️ El sistema trabaja con el formato estándar de exportación de WhatsApp.
-
-▶️ Ejecución del Proyecto
-1. Clonar el repositorio
-git clone https://github.com/usuario/whatsapp-analyzer.git
-cd whatsapp-analyzer
-2. Ejecutar el backend
-mvn spring-boot:run
-
-El servidor iniciará normalmente en:
-
-http://localhost:8080
-3. Ejecutar el frontend
-
-Abrir el archivo principal del frontend en el navegador o levantarlo mediante un servidor local.
-
-Ejemplo:
-
-index.html
-📁 Gestión del Proyecto
 
 Este trabajo prioriza especialmente:
 
@@ -144,14 +94,7 @@ Dashboard Web
 La visualización web permite una experiencia más intuitiva y accesible desde cualquier navegador sin necesidad de instalar software adicional.
 
 👨‍💻 Integrantes
-Nombre Apellido
-Nombre Apellido
-Nombre Apellido
-📌 Estado del Proyecto
-
-🚧 En desarrollo / Trabajo práctico académico
-
-📄 Licencia
-
-Proyecto desarrollado únicamente con fines educativos y académicos.
-No destinado a uso comercial.
+Enzo Ignacio Piñol 
+Ramiro Enzo Bogado Leon 
+Ana Belén Vázquez 
+Dylan Thomas Lopez
