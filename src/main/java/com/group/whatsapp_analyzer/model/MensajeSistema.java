@@ -1,15 +1,13 @@
 package com.group.whatsapp_analyzer.model;
 
-public class Mensaje {
+public class MensajeSistema {
     private String fecha;
     private String hora;
-    private String usuario;
     private String contenido;
 
-    public Mensaje(String fecha, String hora, String usuario, String contenido) {
+    public MensajeSistema(String fecha, String hora, String contenido) {
         this.fecha = fecha;
         this.hora = hora;
-        this.usuario = usuario;
         this.contenido = contenido;
     }
 
@@ -27,14 +25,6 @@ public class Mensaje {
 
     public void setHora(String hora) {
         this.hora = hora;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
     }
 
     public String getContenido() {
