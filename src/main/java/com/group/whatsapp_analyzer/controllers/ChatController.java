@@ -34,8 +34,8 @@ public class ChatController {
         }
 
         try {
-            List<String> lineas = parserService.leerArchivo(file);
-            return ResponseEntity.ok("Archivo leído correctamente. Total de líneas: " + lineas.size());
+            com.group.whatsapp_analyzer.model.ParseResult resultado = parserService.leerArchivo(file);
+            return ResponseEntity.ok(resultado);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error al leer el archivo: " + e.getMessage());
         }
