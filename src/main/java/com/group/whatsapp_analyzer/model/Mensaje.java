@@ -1,10 +1,21 @@
 package com.group.whatsapp_analyzer.model;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class Mensaje {
     private String fecha;
     private String hora;
     private String usuario;
     private String contenido;
+    private String fechaNormalizada;
+    private MessageType tipoMensaje;
+    private Integer longitudMensaje;
+    private Integer cantidadPalabras;
+    private boolean contieneLinks;
+    private boolean contieneEmojis;
 
     public Mensaje(String fecha, String hora, String usuario, String contenido) {
         this.fecha = fecha;
@@ -13,35 +24,4 @@ public class Mensaje {
         this.contenido = contenido;
     }
 
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getHora() {
-        return hora;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getContenido() {
-        return contenido;
-    }
-
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
 }

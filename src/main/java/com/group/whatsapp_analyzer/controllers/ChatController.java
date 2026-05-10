@@ -1,22 +1,20 @@
 package com.group.whatsapp_analyzer.controllers;
 
+import com.group.whatsapp_analyzer.model.ParseResult;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.group.whatsapp_analyzer.services.ParserService;
 
-import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
 
     private final ParserService parserService;
-
-    public ChatController(ParserService parserService) {
-        this.parserService = parserService;
-    }
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadChat(@RequestParam("file") MultipartFile file) {
@@ -33,11 +31,7 @@ public class ChatController {
             return ResponseEntity.badRequest().body("El archivo es demasiado grande. Máximo 10MB");
         }
 
-        try {
-            com.group.whatsapp_analyzer.model.ParseResult resultado = parserService.leerArchivo(file);
-            return ResponseEntity.ok(resultado);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error al leer el archivo: " + e.getMessage());
-        }
+        ParseResult resultado = parserService.leerArchivo(file);
+        return ResponseEntity.ok(parserService.postProcesar(resultado));
     }
 }
