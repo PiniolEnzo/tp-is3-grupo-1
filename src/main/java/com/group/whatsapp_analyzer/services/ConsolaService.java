@@ -26,20 +26,21 @@ public class ConsolaService {
         log.info("😂 Emoji top: {} -> {} veces",
                 estadisticas.getEmojiMasUtilizado(),
                 estadisticas.getFrecuenciaEmojis() != null ?
-                estadisticas.getFrecuenciaEmojis().get(estadisticas.getEmojiMasUtilizado()) : 0);
+                estadisticas.getFrecuenciaEmojis().getOrDefault(estadisticas.getEmojiMasUtilizado(), 0) : 0);
 
         // Franja horaria más activa
         log.info("⏰ Franja más activa: {}hs con {} mensajes",
                 estadisticas.getHoraMasActiva(),
                 estadisticas.getMensajesPorHora() != null ?
-                estadisticas.getMensajesPorHora().get(estadisticas.getHoraMasActiva()) : 0);
+                estadisticas.getMensajesPorHora().getOrDefault(estadisticas.getHoraMasActiva(), 0) : 0);
 
         // Días más activos
         log.info("📅 Días con más mensajes:");
         if (estadisticas.getDiasMasActivos() != null) {
             for (String dia : estadisticas.getDiasMasActivos()) {
                 log.info("   - {} con {} mensajes", dia,
-                        estadisticas.getMensajesPorDia().get(dia));
+                        estadisticas.getMensajesPorDia() != null ? 
+                        estadisticas.getMensajesPorDia().getOrDefault(dia, 0) : 0);
             }
         }
 

@@ -4,6 +4,7 @@ import com.group.whatsapp_analyzer.dto.ActividadUsuarioDTO;
 import com.group.whatsapp_analyzer.dto.EstadisticasNormalizadasDTO;
 import com.group.whatsapp_analyzer.model.ChatDataSet;
 import com.group.whatsapp_analyzer.model.Mensaje;
+import com.group.whatsapp_analyzer.logger.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,25 +20,39 @@ public class AnalisisChatService {
     private final ConsolaService consolaService;
 
     public EstadisticasNormalizadasDTO analizar(MultipartFile file) {
-        ChatDataSet dataSet = parserService.postProcesar(parserService.leerArchivo(file));
-        List<Mensaje> mensajes = dataSet.getMensajes();
-        ActividadUsuarioDTO actividadUsuario = estadisticaService.contarMensajesPorUsuario(dataSet);
-        List<String> emojis = estadisticaService.extraerEmojis(dataSet);
+        String fileName = file.getOriginalFilename();
+        try {
+            Logger.getInstance().log("INFO", "Starting chat processing pipeline for file: " + fileName, fileName);
 
-        EstadisticasNormalizadasDTO estadisticas = EstadisticasNormalizadasDTO.builder()
-                .mensajesPorUsuario(actividadUsuario.getMensajesPorUsuario())
-                .usuarioConMasMensajes(actividadUsuario.getUsuarioConMasMensajes())
-                .cantidadMensajesUsuarioMasActivo(actividadUsuario.getCantidadMensajesUsuarioMasActivo())
-                .frecuenciaPalabras(estadisticaService.contarFrecuencia(mensajes))
-                .frecuenciaEmojis(estadisticaService.contarFrecuenciaEmojis(emojis))
-                .emojiMasUtilizado(estadisticaService.obtenerEmojiMasUtilizado(estadisticaService.contarFrecuenciaEmojis(emojis)))
-                .mensajesPorDia(estadisticaService.contarMensajesPorDia(mensajes))
-                .diasMasActivos(estadisticaService.obtenerDiasMasActivos(mensajes))
-                .mensajesPorHora(estadisticaService.obtenerFrecuenciaMensajesPorHora(dataSet))
-                .horaMasActiva(estadisticaService.obtenerHoraMayorActividad(dataSet))
-                .build();
+            ChatDataSet dataSet = parserService.postProcesar(parserService.leerArchivo(file), fileName);
+            Logger.getInstance().log("INFO", "Parsing stage completed for file: " + fileName, fileName);
 
-        consolaService.mostrarResultados(estadisticas);
-        return estadisticas;
+            List<Mensaje> mensajes = dataSet.getMensajes();
+            ActividadUsuarioDTO actividadUsuario = estadisticaService.contarMensajesPorUsuario(dataSet);
+            List<String> emojis = estadisticaService.extraerEmojis(dataSet);
+            Logger.getInstance().log("INFO", "Initial statistics calculation completed for file: " + fileName, fileName);
+
+            EstadisticasNormalizadasDTO estadisticas = EstadisticasNormalizadasDTO.builder()
+                    .mensajesPorUsuario(actividadUsuario.getMensajesPorUsuario())
+                    .usuarioConMasMensajes(actividadUsuario.getUsuarioConMasMensajes())
+                    .cantidadMensajesUsuarioMasActivo(actividadUsuario.getCantidadMensajesUsuarioMasActivo())
+                    .frecuenciaPalabras(estadisticaService.contarFrecuencia(mensajes))
+                    .frecuenciaEmojis(estadisticaService.contarFrecuenciaEmojis(emojis))
+                    .emojiMasUtilizado(estadisticaService.obtenerEmojiMasUtilizado(estadisticaService.contarFrecuenciaEmojis(emojis)))
+                    .mensajesPorDia(estadisticaService.contarMensajesPorDia(mensajes))
+                    .diasMasActivos(estadisticaService.obtenerDiasMasActivos(mensajes))
+                    .mensajesPorHora(estadisticaService.obtenerFrecuenciaMensajesPorHora(dataSet))
+                    .horaMasActiva(estadisticaService.obtenerHoraMayorActividad(dataSet))
+                    .build();
+            Logger.getInstance().log("INFO", "Full statistics aggregation completed for file: " + fileName, fileName);
+
+            consolaService.mostrarResultados(estadisticas);
+            Logger.getInstance().log("INFO", "Chat processing pipeline completed successfully for file: " + fileName, fileName);
+            return estadisticas;
+        } catch (Exception e) {
+            Logger.getInstance().log("ERROR", "Pipeline failed for file " + fileName + ": " + e.getMessage(), fileName);
+            throw e;
+        }
     }
+
 }
