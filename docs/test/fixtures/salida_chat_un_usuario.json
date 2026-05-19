@@ -1,0 +1,28 @@
+{
+  "mensajesPorUsuario": {
+    "Juan": 3
+  },
+  "usuarioConMasMensajes": "Juan",
+  "cantidadMensajesUsuarioMasActivo": 3,
+  "frecuenciaPalabras": {
+    "hay": 1,
+    "voy": 1,
+    "alguien": 1,
+    "estoy": 1,
+    "chat": 1,
+    "bueno": 1,
+    "dormir": 1,
+    "solo": 1,
+    "hola": 1
+  },
+  "frecuenciaEmojis": {},
+  "emojiMasUtilizado": null,
+  "mensajesPorDia": {
+    "19/05/2026": 3
+  },
+  "diasMasActivos": ["19/05/2026"],
+  "mensajesPorHora": {
+    "20": 3
+  },
+  "horaMasActiva": 20
+}

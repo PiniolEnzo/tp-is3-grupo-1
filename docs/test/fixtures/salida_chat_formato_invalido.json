@@ -1,0 +1,12 @@
+{
+  "mensajesPorUsuario": {},
+  "usuarioConMasMensajes": null,
+  "cantidadMensajesUsuarioMasActivo": 0,
+  "frecuenciaPalabras": {},
+  "frecuenciaEmojis": {},
+  "emojiMasUtilizado": null,
+  "mensajesPorDia": {},
+  "diasMasActivos": [],
+  "mensajesPorHora": {},
+  "horaMasActiva": -1
+}
