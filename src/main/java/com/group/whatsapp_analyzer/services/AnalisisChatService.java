@@ -16,6 +16,7 @@ public class AnalisisChatService {
 
     private final ParserService parserService;
     private final EstadisticaService estadisticaService;
+    private final ConsolaService consolaService;
 
     public EstadisticasNormalizadasDTO analizar(MultipartFile file) {
         ChatDataSet dataSet = parserService.postProcesar(parserService.leerArchivo(file));
@@ -23,9 +24,7 @@ public class AnalisisChatService {
         ActividadUsuarioDTO actividadUsuario = estadisticaService.contarMensajesPorUsuario(dataSet);
         List<String> emojis = estadisticaService.extraerEmojis(dataSet);
 
-
-
-        return EstadisticasNormalizadasDTO.builder()
+        EstadisticasNormalizadasDTO estadisticas = EstadisticasNormalizadasDTO.builder()
                 .mensajesPorUsuario(actividadUsuario.getMensajesPorUsuario())
                 .usuarioConMasMensajes(actividadUsuario.getUsuarioConMasMensajes())
                 .cantidadMensajesUsuarioMasActivo(actividadUsuario.getCantidadMensajesUsuarioMasActivo())
@@ -38,5 +37,7 @@ public class AnalisisChatService {
                 .horaMasActiva(estadisticaService.obtenerHoraMayorActividad(dataSet))
                 .build();
 
+        consolaService.mostrarResultados(estadisticas);
+        return estadisticas;
     }
 }
