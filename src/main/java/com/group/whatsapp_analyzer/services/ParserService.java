@@ -28,64 +28,76 @@ public class ParserService {
     private static final Pattern PATTERN = Pattern.compile("^\\[?(\\d{1,2}[\\/\\-]\\d{1,2}[\\/\\-]\\d{2,4})[\\h,]+(\\d{1,2}:\\d{2}(?::\\d{2})?(?:\\h?[aApP]\\.?\\h?[mM]\\.?)?)\\]?[\\h\\-]+(.*)$");
 
     public ParseResult leerArchivo(MultipartFile file) {
-         
+        String fileName = file.getOriginalFilename();
+        com.group.whatsapp_analyzer.logger.Logger.getInstance().log("INFO", "Starting parsing process for file: " + fileName, fileName);
+          
         ParseResult resultado = new ParseResult();
         
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-
             String linea;
             Mensaje ultimoMensaje = null;
+            int lineNumber = 0;
+ 
+             while ((linea = reader.readLine()) != null) {
+                 lineNumber++;
+                 resultado.incrementarTotalLineas();
+ 
+                 try {
+                     if (esLineaValida(linea)) {
+                         String[] partes = parsearLinea(linea);
+ 
+                         if (partes == null || partes.length < 4) {
+                             throw new LineFormatException("La línea no tiene el formato esperado: " + linea);
+                         }
+ 
+                         String fecha = partes[0];
+                         String hora = partes[1];
+                         String usuario = partes[2];
+                         String contenido = partes[3];
+ 
+                         if (usuario != null) {
+                             // Mensaje normal de usuario
+                             ultimoMensaje = new Mensaje(fecha, hora, usuario, contenido);
+                             resultado.agregarMensaje(ultimoMensaje);
+                             resultado.incrementarLineasValidas();
+                         } else {
+                             // Mensaje de sistema
+                             resultado.agregarMensajeSistema(new MensajeSistema(fecha, hora, contenido));
+                             ultimoMensaje = null; // Reiniciar porque los msjs de sistema rara vez son multilinea
+                         }
+                     } else {
+                         // Línea de continuación de mensaje o inválida
+                         if (ultimoMensaje != null) {
+                             // Concatenamos la línea al último mensaje válido
+                             ultimoMensaje.setContenido(ultimoMensaje.getContenido() + "\n" + linea);
+                         } else {
+                             // Si no hay un mensaje previo válido, y no es vacía, es inválida
+                             if (!linea.isBlank()) {
+                                 resultado.incrementarLineasInvalidas();
+                                  com.group.whatsapp_analyzer.logger.Logger.getInstance().log("WARN", "Skipping line " + lineNumber + ": Invalid format", file.getOriginalFilename());
+                             }
+                         }
+                     }
+                  } catch (LineFormatException | DateInvalidException | InvalidMessageException e) {
+                      resultado.incrementarLineasInvalidas();
+                      com.group.whatsapp_analyzer.logger.Logger.getInstance().log("WARN", "Skipping line " + lineNumber + ": " + e.getMessage(), file.getOriginalFilename());
+                  } catch (DateTimeParseException e) {
+                      resultado.incrementarLineasInvalidas();
+                      com.group.whatsapp_analyzer.logger.Logger.getInstance().log("WARN", "Skipping line " + lineNumber + ": Invalid date format", file.getOriginalFilename());
+                  } catch (IllegalArgumentException e){
+                      resultado.incrementarLineasInvalidas();
+                      com.group.whatsapp_analyzer.logger.Logger.getInstance().log("WARN", "Skipping line " + lineNumber + ": Invalid message content", file.getOriginalFilename());
+                  }
+             }
+ 
+         } catch (IOException e) {
+             throw new InvalidFileException("Error al leer el archivo: " + e.getMessage(), e);
+         }
+ 
+    com.group.whatsapp_analyzer.logger.Logger.getInstance().log("INFO", "Parsing completed. Total lines: " + resultado.getTotalLineas() + ", Valid messages: " + resultado.getMensajes().size() + ", Invalid lines: " + resultado.getLineasInvalidas(), file.getOriginalFilename());
 
-            while ((linea = reader.readLine()) != null) {
-                resultado.incrementarTotalLineas();
-
-                try {
-                    if (esLineaValida(linea)) {
-                        String[] partes = parsearLinea(linea);
-
-                        if (partes == null || partes.length < 4) {
-                            throw new LineFormatException("La línea no tiene el formato esperado: " + linea);
-                        }
-
-                        String fecha = partes[0];
-                        String hora = partes[1];
-                        String usuario = partes[2];
-                        String contenido = partes[3];
-
-                        if (usuario != null) {
-                            // Mensaje normal de usuario
-                            ultimoMensaje = new Mensaje(fecha, hora, usuario, contenido);
-                            resultado.agregarMensaje(ultimoMensaje);
-                            resultado.incrementarLineasValidas();
-                        } else {
-                            // Mensaje de sistema
-                            resultado.agregarMensajeSistema(new MensajeSistema(fecha, hora, contenido));
-                            ultimoMensaje = null; // Reiniciar porque los msjs de sistema rara vez son multilinea
-                        }
-                    } else {
-                        // Línea de continuación de mensaje o inválida
-                        if (ultimoMensaje != null) {
-                            // Concatenamos la línea al último mensaje válido
-                            ultimoMensaje.setContenido(ultimoMensaje.getContenido() + "\n" + linea);
-                        } else {
-                            // Si no hay un mensaje previo válido, y no es vacía, es inválida
-                            if (!linea.isBlank()) {
-                                resultado.incrementarLineasInvalidas();
-                            }
-                        }
-                    }
-                } catch (DateTimeParseException e) {
-                    throw new DateInvalidException("Fecha inválida: "+ linea, e);
-                } catch (IllegalArgumentException e){
-                    throw new InvalidMessageException("Mensaje inválido: " + linea, e);
-                }
-            }
-            
-        } catch (IOException e) {
-            throw new InvalidFileException("Error al leer el archivo: " + e.getMessage(), e);
-        }
-
-        // Checklist: Si hay más del 10% de líneas inválidas, mostrar advertencia al usuario
+ 
+         // Checklist: Si hay más del 10% de líneas inválidas, mostrar advertencia al usuario
         if (resultado.getTotalLineas() > 0) {
             double porcentajeInvalidas = (double) resultado.getLineasInvalidas() / resultado.getTotalLineas();
             if (porcentajeInvalidas > 0.10) {
@@ -122,23 +134,25 @@ public class ParserService {
         return null;
     }
 
-public ChatDataSet postProcesar(ParseResult resultado) {
-        List<Mensaje> mensajesProcesados = new ArrayList<>();
-
-        for (Mensaje m : resultado.getMensajes()) {
-            m.setUsuario(normalizarUsuario(m.getUsuario()));
-            m.setContenido(limpiarContenido(m.getContenido()));
-            if (!esMensajeValido(m.getContenido())) {
-                continue;
-            }
-            m.setFechaNormalizada(normalizarFecha(m.getFecha(), m.getHora()));
-            m.setTipoMensaje(clasificarMensaje(m.getContenido()));
-            agregarMetadata(m);
-            mensajesProcesados.add(m);
-        }
-
-        return new ChatDataSet(mensajesProcesados);
-}
+    public ChatDataSet postProcesar(ParseResult resultado, String fileName) {
+         List<Mensaje> mensajesProcesados = new ArrayList<>();
+ 
+         for (Mensaje m : resultado.getMensajes()) {
+             m.setUsuario(normalizarUsuario(m.getUsuario()));
+             m.setContenido(limpiarContenido(m.getContenido()));
+             if (!esMensajeValido(m.getContenido())) {
+                 continue;
+             }
+             m.setFechaNormalizada(normalizarFecha(m.getFecha(), m.getHora()));
+             m.setTipoMensaje(clasificarMensaje(m.getContenido()));
+             agregarMetadata(m);
+             mensajesProcesados.add(m);
+         }
+ 
+         com.group.whatsapp_analyzer.logger.Logger.getInstance().log("INFO", "Post-processing completed. Messages retained: " + mensajesProcesados.size() + " of " + resultado.getMensajes().size(), fileName);
+ 
+         return new ChatDataSet(mensajesProcesados);
+     }
 
     private String normalizarUsuario(String usuario) {
         if (usuario == null) return null;

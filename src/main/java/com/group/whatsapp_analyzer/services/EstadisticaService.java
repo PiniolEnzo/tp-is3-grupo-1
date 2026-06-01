@@ -1,5 +1,6 @@
 package com.group.whatsapp_analyzer.services;
 
+import com.group.whatsapp_analyzer.dto.ActividadUsuarioDTO;
 import com.group.whatsapp_analyzer.model.ChatDataSet;
 import com.group.whatsapp_analyzer.model.Mensaje;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class EstadisticaService {
     );
 
     // Actividad: Recuento de mensajes por usuario
-    public Map<String, Object> contarMensajesPorUsuario(ChatDataSet chatDataSet) {
+    public ActividadUsuarioDTO contarMensajesPorUsuario(ChatDataSet chatDataSet) {
 
         List<Mensaje> mensajes = chatDataSet.getMensajes();
         Map<String, Integer> conteo = new HashMap<>();
@@ -38,7 +39,7 @@ public class EstadisticaService {
         }
 
         String usuarioConMas = null;
-        int maxMensajes = 0;
+        Integer maxMensajes = 0;
 
         for (Map.Entry<String, Integer> entry : conteo.entrySet()) {
             if (entry.getValue() > maxMensajes) {
@@ -47,12 +48,11 @@ public class EstadisticaService {
             }
         }
 
-        Map<String, Object> resultado = new HashMap<>();
-        resultado.put("conteoPorUsuario", conteo);
-        resultado.put("usuarioConMasMensajes", usuarioConMas);
-        resultado.put("totalMensajes", maxMensajes);
-
-        return resultado;
+        return ActividadUsuarioDTO.builder()
+                .mensajesPorUsuario(conteo)
+                .usuarioConMasMensajes(usuarioConMas)
+                .cantidadMensajesUsuarioMasActivo(maxMensajes)
+                .build();
     }
 
     // Actividad: Frecuencia de palabras
@@ -125,7 +125,15 @@ public class EstadisticaService {
     for (String emoji : emojis) {
         frecuencia.put(emoji, frecuencia.getOrDefault(emoji, 0) + 1);
     }
-    return frecuencia;
+    return frecuencia.entrySet()
+            .stream()
+            .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (a, b) -> a,
+                    LinkedHashMap::new
+            ));
    }
 
     public String obtenerEmojiMasUtilizado(Map<String, Integer> frecuenciaEmojis) {

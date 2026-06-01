@@ -1,0 +1,10 @@
+Sistema de Logs
+=========================
+Formato: JSON Lines (JSONL)
+Esquema: {timestamp, level, message, context}
+Archivos: Los archivos se nombran como logs seguido de la fecha y
+hora del mismo con extensión .jsonl (Ej.: logs_yyyyMMdd_HH.jsonl).
+Así, se genera un nuevo archivo de logs cada hora, facilitando la
+organización y gestión de los registros.
+Consultas: Usar un parser JSON o editor de texto para leer los archivos
+de logging por de cada archivo procesado.

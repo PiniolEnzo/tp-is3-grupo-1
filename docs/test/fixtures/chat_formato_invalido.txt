@@ -1,0 +1,5 @@
+Este es un archivo que no tiene el formato de WhatsApp.
+Línea 1: Hola, esto no es un log.
+Línea 2: Sigue siendo texto aleatorio.
+1234567890
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

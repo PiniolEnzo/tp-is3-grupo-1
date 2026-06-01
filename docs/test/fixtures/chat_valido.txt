@@ -1,0 +1,9 @@
+19/5/2026, 10:00 p. m. - Los mensajes y las llamadas están cifrados de extremo a extremo.
+19/5/2026, 10:01 p. m. - Juan: Hola a todos!
+19/5/2026, 10:02 p. m. - Maria: Hola Juan, como andas?
+19/5/2026, 10:03 p. m. - Juan: Todo bien, estoy laburando en el TP.
+19/5/2026, 10:05 p. m. - Maria: Yo tambien, falta poco.
+19/5/2026, 10:10 p. m. - Pedro: Che, alguien tiene el link del repositorio?
+19/5/2026, 10:12 p. m. - Juan: Si, te lo paso por privado.
+19/5/2026, 10:15 p. m. - Juan cambió el nombre del grupo a "Los Arquitectos".
+19/5/2026, 10:20 p. m. - Maria: Perfecto, seguimos coordinando por aca.

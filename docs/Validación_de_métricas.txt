@@ -1,0 +1,125 @@
+# Validación de métricas
+
+## Objetivo
+
+Verificar que las métricas generadas por el sistema reflejen correctamente la información contenida en los chats de WhatsApp procesados.
+
+---------------------------------------------------------------------------------
+
+Punto 1 — Comparar resultados con conteo manual
+
+Se realizó una validación manual utilizando un chat de prueba pequeño con mensajes controlados.
+
+01/01/24, 10:00 - Juan: hola hola hola mundo
+01/01/24, 10:01 - Ana: mundo chat
+
+El sistema devolvió correctamente la frecuencia esperada de palabras y el conteo de mensajes por usuario.
+
+Resultados esperados y obtenidos:
+
+- hola = 3
+- mundo = 2
+- chat = 1
+
+El resultado generado por el sistema coincidió correctamente con el conteo manual.
+
+---------------------------------------------------------------------------------
+
+Punto 2 — Verificar empates en métricas
+
+Se validaron casos con empate en métricas utilizando usuarios con igual cantidad de mensajes.
+
+01/01/24, 10:00 - Juan: hola
+01/01/24, 10:01 - Ana: mundo
+01/01/24, 10:02 - Juan: chat
+01/01/24, 10:03 - Ana: prueba
+
+Resultados esperados y obtenidos:
+
+- Juan = 2
+- Ana = 2
+
+El sistema contabilizó correctamente los mensajes de cada usuario sin inconsistencias en los resultados.
+
+---------------------------------------------------------------------------------
+
+Punto 3 — Validar casos con pocos datos
+
+Se realizaron pruebas utilizando chats mínimos con un único mensaje.
+
+01/01/24, 10:00 - Juan: hola
+
+Resultados esperados y obtenidos:
+
+- total mensajes = 1
+- hola = 1
+
+El sistema procesó correctamente el archivo sin errores ni inconsistencias.
+
+---------------------------------------------------------------------------------
+
+Punto 4 — Revisar casos extremos (+1500 mensajes)
+
+Se realizaron pruebas utilizando chats reales con grandes volúmenes de mensajes.
+
+El sistema pudo procesar correctamente archivos con más de 1500 mensajes manteniendo consistencia en las métricas generadas.
+
+El tiempo de respuesta aumentó levemente respecto a chats pequeños, pero se mantuvo dentro de valores aceptables para el alcance del proyecto.
+
+---------------------------------------------------------------------------------
+
+Punto 5 — Confirmar que no se cuentan mensajes vacíos o inválidos
+
+Se verificó que las líneas inválidas o sin formato WhatsApp no fueran incluidas en las métricas finales.
+
+Texto inválido
+Otra línea cualquiera
+
+01/01/24, 10:00 - Juan: hola
+
+Resultados esperados y obtenidos:
+
+- Válidos = 1
+- Inválidos = 2
+- hola = 1
+
+El sistema detectó correctamente las líneas inválidas sin afectar la ejecución ni las métricas finales.
+
+---------------------------------------------------------------------------------
+
+Punto 6 — Validar impacto de normalización
+
+Se validó la normalización de texto verificando el tratamiento de mayúsculas, signos y emojis.
+
+01/01/24, 10:00 - Juan: Hola!
+01/01/24, 10:01 - Ana: HOLA
+01/01/24, 10:02 - Pedro: hola 😊
+
+El sistema unificó correctamente palabras equivalentes como:
+
+- Hola
+- HOLA
+- hola!
+
+Resultados esperados y obtenidos:
+
+- hola = 3
+
+El sistema contabilizó correctamente todas las variantes como una única palabra.
+
+---------------------------------------------------------------------------------
+
+## Conclusión
+
+Las validaciones realizadas permitieron comprobar que las métricas generadas por el sistema representan correctamente la información contenida en los chats procesados.
+
+Se verificó el correcto funcionamiento de:
+
+- frecuencia de palabras
+- conteo de mensajes por usuario
+- validación de líneas inválidas
+- normalización de texto
+- procesamiento de chats grandes
+- consistencia de métricas
+
+El sistema respondió correctamente tanto en pruebas pequeñas como en chats reales de gran volumen, manteniendo estabilidad y coherencia en los resultados obtenidos.

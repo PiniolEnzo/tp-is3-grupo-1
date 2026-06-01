@@ -1,0 +1,44 @@
+{
+  "mensajesPorUsuario": {
+    "Pedro": 1,
+    "Juan": 3,
+    "Maria": 3
+  },
+  "usuarioConMasMensajes": "Juan",
+  "cantidadMensajesUsuarioMasActivo": 3,
+  "frecuenciaPalabras": {
+    "hola": 2,
+    "che": 1,
+    "repositorio": 1,
+    "coordinando": 1,
+    "andas": 1,
+    "link": 1,
+    "juan": 1,
+    "seguimos": 1,
+    "laburando": 1,
+    "perfecto": 1,
+    "todo": 1,
+    "alguien": 1,
+    "tiene": 1,
+    "estoy": 1,
+    "falta": 1,
+    "tambien": 1,
+    "paso": 1,
+    "todos": 1,
+    "tp": 1,
+    "privado": 1,
+    "bien": 1,
+    "aca": 1,
+    "poco": 1
+  },
+  "frecuenciaEmojis": {},
+  "emojiMasUtilizado": null,
+  "mensajesPorDia": {
+    "19/05/2026": 7
+  },
+  "diasMasActivos": ["19/05/2026"],
+  "mensajesPorHora": {
+    "22": 7
+  },
+  "horaMasActiva": 22
+}
