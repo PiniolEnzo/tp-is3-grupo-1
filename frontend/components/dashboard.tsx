@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { User, Clock, Smile } from "lucide-react";
+import { User, Clock, Smile, MessageSquare, Calendar } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
-import { HourlyChart } from "@/components/hourly-chart";
 import { DailyChart } from "@/components/daily-chart";
 import { Button } from "@/components/ui/button";
 import type { ChatStats } from "@/lib/chat-parser";
 import { formatHour } from "@/lib/chat-parser";
+import { ParticipantsChart } from "./participants-chart";
+import { EmojiChart } from "./emoji-chart";
 
 interface DashboardProps {
   stats: ChatStats;
@@ -47,6 +48,11 @@ export function Dashboard({ stats, onReset }: DashboardProps) {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <StatCard
+            title="Total de Mensajes"
+            value={stats.totalMessages.toLocaleString()}
+            icon={MessageSquare}
+          />
+          <StatCard
             title="Usuario Más Activo"
             value={stats.topSender.name || "N/A"}
             subtitle={`${stats.topSender.count.toLocaleString()} mensajes`}
@@ -64,12 +70,21 @@ export function Dashboard({ stats, onReset }: DashboardProps) {
             subtitle={`${stats.topEmoji.count.toLocaleString()} veces`}
             icon={Smile}
           />
+          <StatCard
+            title="Participantes"
+            value={stats.participants.size.toString()}
+            icon={Calendar}
+          />
         </div>
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <HourlyChart data={stats.hourlyActivity} />
           <DailyChart data={stats.busiestDays} />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <ParticipantsChart data={stats.participants} />
+          <EmojiChart data={stats.emojis} />
         </div>
 
         {/* Footer */}
