@@ -21,32 +21,34 @@ export default function Home() {
   }, []);
 
   const handleFileLoaded = useCallback((content: string) => {
-    setIsLoading(true);
-    setError(null);
+   setIsLoading(true);
+   setError(null);
 
-    setTimeout(() => {
-      try {
-        const parsedStats = parseWhatsAppChat(content);
-
-        if (parsedStats.totalMessages === 0) {
-          setError(
-            "No se encontraron mensajes en el archivo. Asegúrate de que sea un chat de WhatsApp exportado correctamente."
-          );
-          setIsLoading(false);
-          return;
-        }
-
-        setStats(parsedStats);
-      } catch {
-        setError(
-          "Error al procesar el archivo. Por favor, verifica el formato."
-        );
-      } finally {
+   setTimeout(() => {
+    try {
+      if (!content || content.trim() === "") {
+        setError("El archivo está vacío. Por favor, subí un archivo con contenido.");
         setIsLoading(false);
+        return;
       }
-    }, 100);
-  }, []);
 
+      const parsedStats = parseWhatsAppChat(content);
+
+      if (parsedStats.totalMessages === 0) {
+        setError("El archivo no tiene formato válido de WhatsApp. Asegurate de exportarlo desde WhatsApp → Chat → Más → Exportar chat.");
+        setIsLoading(false);
+        return;
+      }
+
+      setStats(parsedStats);
+    } catch {
+      setError("Ocurrió un error inesperado al procesar el archivo. Verificá que el archivo no esté dañado.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, 100);
+  }, []);
+  
   const handleReset = useCallback(() => {
     setStats(null);
     setError(null);
