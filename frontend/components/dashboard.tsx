@@ -9,6 +9,8 @@ import type { ChatStats } from "@/lib/chat-parser";
 import { formatHour } from "@/lib/chat-parser";
 import { ParticipantsChart } from "./participants-chart";
 import { EmojiChart } from "./emoji-chart";
+import { WordCloud } from "./word-cloud";
+import { HourlyChart } from "./hourly-chart";
 
 interface DashboardProps {
   stats: ChatStats;
@@ -79,6 +81,7 @@ export function Dashboard({ stats, onReset }: DashboardProps) {
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <HourlyChart data={stats.hourlyActivity} />
           <DailyChart data={stats.busiestDays} />
         </div>
 
@@ -86,6 +89,9 @@ export function Dashboard({ stats, onReset }: DashboardProps) {
           <ParticipantsChart data={stats.participants} />
           <EmojiChart data={stats.emojis} />
         </div>
+
+        {/* Word Cloud */}
+        <WordCloud words={stats.topWords} />
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-border text-center">
