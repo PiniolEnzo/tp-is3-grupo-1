@@ -16,11 +16,27 @@ export function FileUpload({ onFileLoaded, isLoading }: FileUploadProps) {
   const [error, setError] = useState<string | null>(null);
 
   const processFile = useCallback(
-    (file: File) => {
+    async (file: File) => {
       setError(null);
 
       if (!file.name.endsWith(".txt")) {
         setError("Por favor, sube un archivo .txt exportado de WhatsApp");
+        return;
+      }
+
+      if (file.size === 0) {
+        setError("El archivo está vacío");
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        if (text.trim().length === 0) {
+          setError("El archivo no contiene mensajes");
+          return;
+        }
+      } catch (e) {
+        setError("No se pudo leer el archivo");
         return;
       }
 
