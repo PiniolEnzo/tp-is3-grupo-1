@@ -13,6 +13,10 @@ export function useChatAnalyzer() {
 
     try {
       const parsedStats = await chatService.uploadChat(file);
+      if (parsedStats.totalMessages === 0) {
+        throw new Error("El archivo no contiene mensajes válidos");
+        setStats(null);
+      }
       setStats(parsedStats);
     } catch (err) {
       console.error(err);
