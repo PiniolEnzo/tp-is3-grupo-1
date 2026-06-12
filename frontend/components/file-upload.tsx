@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface FileUploadProps {
-  onFileLoaded: (content: string) => void;
+  onFileLoaded: (file: File) => void;
   isLoading?: boolean;
 }
 
@@ -24,20 +24,10 @@ export function FileUpload({ onFileLoaded, isLoading }: FileUploadProps) {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        if (content) {
-          setFileName(file.name);
-          onFileLoaded(content);
-        }
-      };
-      reader.onerror = () => {
-        setError("Error al leer el archivo");
-      };
-      reader.readAsText(file);
+      setFileName(file.name);
+      onFileLoaded(file);
     },
-    [onFileLoaded]
+    [onFileLoaded],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -60,7 +50,7 @@ export function FileUpload({ onFileLoaded, isLoading }: FileUploadProps) {
         processFile(file);
       }
     },
-    [processFile]
+    [processFile],
   );
 
   const handleFileInput = useCallback(
@@ -70,7 +60,7 @@ export function FileUpload({ onFileLoaded, isLoading }: FileUploadProps) {
         processFile(file);
       }
     },
-    [processFile]
+    [processFile],
   );
 
   const handleReset = useCallback(() => {
@@ -90,7 +80,7 @@ export function FileUpload({ onFileLoaded, isLoading }: FileUploadProps) {
           isDragging
             ? "border-primary bg-primary/5"
             : "border-border hover:border-primary/50 hover:bg-secondary/50",
-          isLoading && "pointer-events-none opacity-50"
+          isLoading && "pointer-events-none opacity-50",
         )}
       >
         {fileName ? (

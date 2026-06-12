@@ -4,58 +4,23 @@ import { useState, useCallback, useEffect } from "react";
 import { MessageCircle } from "lucide-react";
 import { FileUpload } from "@/components/file-upload";
 import { Dashboard } from "@/components/dashboard";
-import { parseWhatsAppChat, type ChatStats } from "@/lib/chat-parser";
 import { Spinner } from "@/components/ui/spinner";
+import { useChatAnalyzer } from "@/hooks/use-chat-analyzer";
+import { chatService } from "@/services/chatService";
 
 export default function Home() {
-  const [stats, setStats] = useState<ChatStats | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { stats, isLoading, error, analyzeFile, reset } = useChatAnalyzer();
   const [backendStatus, setBackendStatus] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/test")
-      .then((res) => res.text())
+    chatService
+      .testConnection()
       .then((data) => setBackendStatus(data))
       .catch(() => setBackendStatus("No se pudo conectar con el backend"));
   }, []);
 
-  const handleFileLoaded = useCallback((content: string) => {
-   setIsLoading(true);
-   setError(null);
-
-   setTimeout(() => {
-    try {
-      if (!content || content.trim() === "") {
-        setError("El archivo está vacío. Por favor, subí un archivo con contenido.");
-        setIsLoading(false);
-        return;
-      }
-
-      const parsedStats = parseWhatsAppChat(content);
-
-      if (parsedStats.totalMessages === 0) {
-        setError("El archivo no tiene formato válido de WhatsApp. Asegurate de exportarlo desde WhatsApp → Chat → Más → Exportar chat.");
-        setIsLoading(false);
-        return;
-      }
-
-      setStats(parsedStats);
-    } catch {
-      setError("Ocurrió un error inesperado al procesar el archivo. Verificá que el archivo no esté dañado.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, 100);
-  }, []);
-  
-  const handleReset = useCallback(() => {
-    setStats(null);
-    setError(null);
-  }, []);
-
   if (stats) {
-    return <Dashboard stats={stats} onReset={handleReset} />;
+    return <Dashboard stats={stats} onReset={reset} />;
   }
 
   return (
@@ -99,7 +64,7 @@ export default function Home() {
             <p className="text-muted-foreground">Analizando tu chat...</p>
           </div>
         ) : (
-          <FileUpload onFileLoaded={handleFileLoaded} isLoading={isLoading} />
+          <FileUpload onFileLoaded={analyzeFile} isLoading={isLoading} />
         )}
 
         {error && (
