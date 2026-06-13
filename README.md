@@ -1,6 +1,6 @@
 # WhatsApp Chat Analyzer
 
-Aplicación web para el análisis estadístico de chats grupales exportados de WhatsApp, permitiendo visualizar métricas relevantes sobre la interacción entre los participantes mediante un dashboard interactivo.
+Aplicación web para el análisis estadístico de chats exportados de WhatsApp, permitiendo visualizar métricas relevantes sobre la interacción entre los participantes mediante un dashboard interactivo.
 
 ## Objetivo del Proyecto
 
@@ -8,20 +8,25 @@ Desarrollar una plataforma web que permita:
 
 - Cargar un archivo de chat exportado de WhatsApp (.txt)
 - Procesar la información contenida en el chat
-- Generar estadísticas automáticas sobre la actividad del grupo
+- Generar estadísticas automáticas sobre la actividad del chat
 - Visualizar los resultados de forma clara e intuitiva mediante un dashboard interactivo
 
-Este proyecto fue desarrollado como trabajo práctico académico, priorizando la lógica de procesamiento, la organización del proyecto y la correcta gestión del desarrollo por sobre la estética visual.
+Este proyecto fue desarrollado como trabajo práctico universitario, priorizando la organización del proyecto y la correcta gestión del desarrollo por sobre la estética visual y la codificación.
 
 ## Funcionalidades Implementadas
 
-El sistema calcula y muestra como mínimo:
+El sistema calcula y muestra:
 
-- **Usuario con mayor cantidad de mensajes**: identificación del participante más activo dentro del chat.
-- **Emoji más utilizado**: detección y conteo de emojis más frecuentes.
-- **Franja horaria con mayor actividad**: análisis de horarios con mayor volumen de mensajes.
-- **Días con mayor cantidad de mensajes**: agrupación y visualización de actividad por día.
-- **Nube de palabras (word cloud)**: visualización de las palabras más repetidas dentro de la conversación.
+- **Distribución de mensajes por participante**: determina cuántos mensajes envió cada integrante de la conversación.
+- **Participante más activo**: identifica quién tuvo la mayor participación en el chat.
+- **Nivel de actividad del participante principal**: calcula la cantidad de mensajes enviados por la persona más activa.
+- **Análisis de vocabulario**: registra y contabiliza las palabras más utilizadas en la conversación.
+- **Análisis de emojis**: identifica y cuenta la frecuencia de uso de cada emoji.
+- **Emoji predominante**: determina cuál fue el emoji más utilizado en el chat.
+- **Actividad por fecha**: calcula cuántos mensajes se intercambiaron en cada día.
+- **Días de mayor interacción**: identifica las fechas con el mayor volumen de mensajes.
+- **Actividad por franja horaria**: analiza la distribución de mensajes a lo largo de las distintas horas del día.
+- **Hora pico de actividad**: determina el momento del día en que se registró la mayor cantidad de mensajes.
 
 ## Tecnologías Utilizadas
 
@@ -127,7 +132,7 @@ Desde WhatsApp:
 3. Elegir _Sin archivos multimedia_
 4. Guardar el archivo `.txt`
 
-> ⚠️ El sistema trabaja con el formato estándar de exportación de WhatsApp.
+> El sistema trabaja con el formato estándar de exportación de WhatsApp.
 
 ## Gestión del Proyecto
 
@@ -144,7 +149,7 @@ Este trabajo prioriza especialmente:
 
 ### Separación Frontend / Backend
 
-Se optó por una arquitectura separada para facilitar: mantenimiento, escalabilidad, testing y trabajo colaborativo por ramas.
+Se optó por una arquitectura separada entre Backend y Frontend para facilitar el mantenimiento, la escalabilidad, el testing y el trabajo colaborativo.
 
 ### Procesamiento de los Archivos
 
